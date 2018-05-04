@@ -164,4 +164,3 @@ class ModuleMessage:
     def cell_6_balancing(self):
         bitmask = int(self.ALARM_AND_STATUS_BITMASKS['cell_6_balancing'], 2)
         return (bitmask & self.alarm_and_status_int()) > 0
-
