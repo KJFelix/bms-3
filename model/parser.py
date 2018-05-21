@@ -23,16 +23,17 @@ class Parser:
         return self.message_array_memo
 
     def message_type(self):
-        return self.message_array()[1]
+        return self.message_array()[1].strip()
 
     def message_dict(self):
-        if self.message_type == self.STRING_TYPE:
+        if self.message_type() == self.STRING_TYPE:
             return dict(zip(StringMessage.ATTRIBUTE_KEYS, self.message_array()))
-        else:
+        else if self.message_type() == self.MODULE_TYPE:
             return dict(zip(ModuleMessage.ATTRIBUTE_KEYS, self.message_array()))
 
     def message(self):
-        if self.message_type == self.STRING_TYPE:
+        print(self.message_type)
+        if self.message_type() == self.STRING_TYPE:
             return StringMessage(self.message_dict())
-        else:
+        else if self.message_type() == self.MODULE_TYPE:
             return ModuleMessage(self.message_dict())

@@ -66,67 +66,14 @@ class StringMessage:
     # Pass an options dict to instantiate.
     def __init__(self, options):
         for key in self.ATTRIBUTE_KEYS:
-            setattr(self, key, options[key])
+            setattr(self, key, options[key].strip())
+
+        for key in self.ALARM_AND_STATUS_BITMASKS:
+            setattr(self, key, self.parse_alarm_or_status_by_name(key))
 
     def alarm_and_status_int(self):
         return int(self.alarm_and_status, 16)
 
-    def temperature_warning(self):
-        bitmask = int(self.ALARM_AND_STATUS_BITMASKS['temperature_warning'], 2)
-        return (bitmask & self.alarm_and_status_int()) > 0
-
-    def temperature_fault(self):
-        bitmask = int(self.ALARM_AND_STATUS_BITMASKS['temperature_fault'], 2)
-        return (bitmask & self.alarm_and_status_int()) > 0
-
-    def high_current_warning(self):
-        bitmask = int(self.ALARM_AND_STATUS_BITMASKS['high_current_warning'], 2)
-        return (bitmask & self.alarm_and_status_int()) > 0
-
-    def high_current_fault(self):
-        bitmask = int(self.ALARM_AND_STATUS_BITMASKS['high_current_fault'], 2)
-        return (bitmask & self.alarm_and_status_int()) > 0
-
-    def high_voltage_warning(self):
-        bitmask = int(self.ALARM_AND_STATUS_BITMASKS['high_voltage_warning'], 2)
-        return (bitmask & self.alarm_and_status_int()) > 0
-
-    def high_voltage_fault(self):
-        bitmask = int(self.ALARM_AND_STATUS_BITMASKS['high_voltage_fault'], 2)
-        return (bitmask & self.alarm_and_status_int()) > 0
-
-    def low_voltage_warning(self):
-        bitmask = int(self.ALARM_AND_STATUS_BITMASKS['low_voltage_warning'], 2)
-        return (bitmask & self.alarm_and_status_int()) > 0
-
-    def low_voltage_fault(self):
-        bitmask = int(self.ALARM_AND_STATUS_BITMASKS['low_voltage_fault'], 2)
-        return (bitmask & self.alarm_and_status_int()) > 0
-
-    def low_voltage_non_recoverable_fault(self):
-        bitmask = int(self.ALARM_AND_STATUS_BITMASKS['low_voltage_non_recoverable_fault'], 2)
-        return (bitmask & self.alarm_and_status_int()) > 0
-
-    def charge_low_warning(self):
-        bitmask = int(self.ALARM_AND_STATUS_BITMASKS['charge_low_warning'], 2)
-        return (bitmask & self.alarm_and_status_int()) > 0
-
-    def module_communication_error(self):
-        bitmask = int(self.ALARM_AND_STATUS_BITMASKS['module_communication_error'], 2)
-        return (bitmask & self.alarm_and_status_int()) > 0
-
-    def bms_self_check_warning(self):
-        bitmask = int(self.ALARM_AND_STATUS_BITMASKS['bms_self_check_warning'], 2)
-        return (bitmask & self.alarm_and_status_int()) > 0
-
-    def under_volt_disable(self):
-        bitmask = int(self.ALARM_AND_STATUS_BITMASKS['under_volt_disable'], 2)
-        return (bitmask & self.alarm_and_status_int()) > 0
-
-    def over_volt_disable(self):
-        bitmask = int(self.ALARM_AND_STATUS_BITMASKS['over_volt_disable'], 2)
-        return (bitmask & self.alarm_and_status_int()) > 0
-
-    def string_contactor_on(self):
-        bitmask = int(self.ALARM_AND_STATUS_BITMASKS['string_contactor_on'], 2)
+    def parse_alarm_or_status_by_name(self, code):
+        bitmask = int(self.ALARM_AND_STATUS_BITMASKS[code], 2)
         return (bitmask & self.alarm_and_status_int()) > 0
