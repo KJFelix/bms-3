@@ -1,4 +1,56 @@
-class ModuleMessage:
+from sqlalchemy import Column, Boolean, String, Integer, Date, DateTime, func
+from base import Base
+
+class ModuleMessage(Base):
+    __tablename__ = "module_message"
+    
+    id = Column(Integer, primary_key=True)
+    created_at = Column(DateTime(timezone=True), default=func.now())
+    protocol_id = Column(String)
+    message_type = Column(String)
+    message_length = Column(Integer)
+    message_id = Column(String)
+    string_id = Column(String)
+    module_id = Column(String)
+    module_state = Column(String)
+    module_state_of_change = Column(Integer)
+    min_cell_temperature = Column(Integer)
+    avg_cell_temperature = Column(Integer)
+    max_cell_temperature = Column(Integer)
+    module_voltage = Column(Integer)
+    min_cell_voltage = Column(Integer)
+    avg_cell_voltage = Column(Integer)
+    max_cell_voltage = Column(Integer)
+    module_amperes = Column(Integer)
+    alarm_and_status = Column(Integer)
+    module_assembly_revision = Column(String)
+    module_serial_no = Column(String)
+    master_software_version = Column(String)
+    slave_software_version = Column(String)
+    max_front_power_conn_temp = Column(Integer)
+
+    temperature_warning = Column(Boolean)
+    temperature_fault = Column(Boolean)
+    high_current_warning = Column(Boolean)
+    high_current_fault = Column(Boolean)
+    high_voltage_warning = Column(Boolean)
+    high_voltage_fault = Column(Boolean)
+    low_voltage_warning = Column(Boolean)
+    low_voltage_fault = Column(Boolean)
+    low_voltage_non_recoverable_fault = Column(Boolean)
+    charge_low_warning = Column(Boolean)
+    module_communication_error = Column(Boolean)
+    module_communication_fault = Column(Boolean)
+    under_volt_disable = Column(Boolean)
+    over_volt_disable = Column(Boolean)
+    cell_0_balancing = Column(Boolean)
+    cell_1_balancing = Column(Boolean)
+    cell_2_balancing = Column(Boolean)
+    cell_3_balancing = Column(Boolean)
+    cell_4_balancing = Column(Boolean)
+    cell_5_balancing = Column(Boolean)
+    cell_6_balancing = Column(Boolean)
+
     ATTRIBUTE_KEYS = [
         'protocol_id',
         'message_type',
@@ -65,7 +117,7 @@ class ModuleMessage:
         'avg_cell_voltage': '003672',
         'max_cell_voltage': '003710',
         'module_amperes': '00000',
-        'alarm_and_status': '00000000',
+        'alarm_and_status': '80000000',
         'module_assembly_revision': '000',
         'module_serial_no': '1311250000800',
         'master_software_version': '0501',
@@ -78,12 +130,11 @@ class ModuleMessage:
         for key in self.ATTRIBUTE_KEYS:
             setattr(self, key, options[key].strip())
 
+        setattr(self, 'alarm_and_status', int(options["alarm_and_status"].strip(), 16))
+
         for key in self.ALARM_AND_STATUS_BITMASKS:
             setattr(self, key, self.parse_alarm_or_status_by_name(key))
 
-    def alarm_and_status_int(self):
-        return int(self.alarm_and_status, 16)
-
     def parse_alarm_or_status_by_name(self, code):
         bitmask = int(self.ALARM_AND_STATUS_BITMASKS[code], 2)
-        return (bitmask & self.alarm_and_status_int()) > 0
+        return (bitmask & self.alarm_and_status) > 0

@@ -1,4 +1,49 @@
-class StringMessage:
+from sqlalchemy import Column, Boolean, String, Integer, Date, DateTime, func
+from base import Base
+
+class StringMessage(Base):
+    __tablename__ = "string_message"
+    
+    id = Column(Integer, primary_key=True)
+    created_at = Column(DateTime(timezone=True), default=func.now())
+
+    protocol_id = Column(String)
+    message_type = Column(String)
+    message_length = Column(Integer)
+    message_id = Column(String)
+    string_id = Column(String)
+    state = Column(String)
+    state_of_charge = Column(Integer)
+    temperature = Column(Integer)
+    voltage = Column(Integer)
+    amperes = Column(Integer)
+    alarm_and_status = Column(Integer)
+    bms_assembly_revision = Column(Integer)
+    bms_serial_no = Column(String)
+    bms_master_software_version = Column(String)
+    bms_slave_software_version = Column(String)
+    watt_hours_to_discharge = Column(Integer)
+    watt_hours_to_charge = Column(Integer)
+    min_cell_millivolts = Column(Integer)
+    max_cell_millivolts = Column(Integer)
+    front_power_temperature = Column(Integer)
+
+    temperature_warning = Column(Boolean)
+    temperature_fault = Column(Boolean)
+    high_current_warning = Column(Boolean)
+    high_current_fault = Column(Boolean)
+    high_voltage_warning = Column(Boolean)
+    high_voltage_fault = Column(Boolean)
+    low_voltage_warning = Column(Boolean)
+    low_voltage_fault = Column(Boolean)
+    low_voltage_non_recoverable_fault = Column(Boolean)
+    charge_low_warning = Column(Boolean)
+    module_communication_error = Column(Boolean)
+    bms_self_check_warning = Column(Boolean)
+    under_volt_disable = Column(Boolean)
+    over_volt_disable = Column(Boolean)
+    string_contactor_on = Column(Boolean)
+
     ATTRIBUTE_KEYS = [
         'protocol_id',
         'message_type',
@@ -68,12 +113,11 @@ class StringMessage:
         for key in self.ATTRIBUTE_KEYS:
             setattr(self, key, options[key].strip())
 
+        setattr(self, 'alarm_and_status', int(options["alarm_and_status"].strip(), 16))
+
         for key in self.ALARM_AND_STATUS_BITMASKS:
             setattr(self, key, self.parse_alarm_or_status_by_name(key))
 
-    def alarm_and_status_int(self):
-        return int(self.alarm_and_status, 16)
-
     def parse_alarm_or_status_by_name(self, code):
         bitmask = int(self.ALARM_AND_STATUS_BITMASKS[code], 2)
-        return (bitmask & self.alarm_and_status_int()) > 0
+        return (bitmask & self.alarm_and_status) > 0

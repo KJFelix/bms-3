@@ -28,12 +28,11 @@ class Parser:
     def message_dict(self):
         if self.message_type() == self.STRING_TYPE:
             return dict(zip(StringMessage.ATTRIBUTE_KEYS, self.message_array()))
-        else if self.message_type() == self.MODULE_TYPE:
+        elif self.message_type() == self.MODULE_TYPE:
             return dict(zip(ModuleMessage.ATTRIBUTE_KEYS, self.message_array()))
 
     def message(self):
-        print(self.message_type)
         if self.message_type() == self.STRING_TYPE:
             return StringMessage(self.message_dict())
-        else if self.message_type() == self.MODULE_TYPE:
+        elif self.message_type() == self.MODULE_TYPE:
             return ModuleMessage(self.message_dict())

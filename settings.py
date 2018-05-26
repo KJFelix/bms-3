@@ -1,7 +1,4 @@
 import os
-# Uncomment once https://github.com/theskumar/python-dotenv/issues/113 is fixed
-# from dotenv import load_dotenv
-# load_dotenv()
 
 DATABASE = {
     'drivername': 'postgres',
